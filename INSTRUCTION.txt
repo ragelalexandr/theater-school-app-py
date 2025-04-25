@@ -1,0 +1,209 @@
+Давайте разработаем архитектуру проекта на Python с использованием фреймворка Django – это один из самых удобных инструментов для реализации многофункциональных веб-приложений с учётом авторизации, работы с формами, отправки email и административного интерфейса. Ниже приведу обзор структуры проекта, модели данных, маршруты (urls) и краткий обзор реализации ключевого функционала.
+
+1. Общая архитектура проекта
+Мы создадим несколько модулей (приложений) для разделения обязанностей, например:
+
+accounts/ Реализует регистрацию, авторизацию, восстановление пароля, редактирование профиля (имя, контакты, фотография, смена пароля, удаление учётной записи). Можем использовать кастомную модель пользователя, расширяя AbstractUser.
+
+courses/ Здесь реализуем функционал для студентов: просмотр расписания курсов, запись на курсы (выбор курса, преподавателя, типа прохождения, дат начала и окончания, подтверждение записи) и ведение истории записей с указанием статусов (ожидание, подтверждено, завершено). Для преподавателя этот модуль дополнится списком курсов и информацией о зачисленных студентах, а также возможностью подтверждения/отклонения заявок.
+
+portfolio/ Приложение для создания и редактирования портфолио, где студент может добавлять фотографии, видео и текстовые описания достижений с возможностью редактирования и удаления.
+
+reviews/ Модуль для оставления и модерации отзывов. Администратор сможет модерировать отзывы (например, устанавливать флаг “проверено”).
+
+admin_panel/ (или мы можем полностью полагаться на встроенную панель Django) Для административного функционала: управление данными о театральных представлениях, курсах, преподавателях и студентах. Ведь Django admin позволяет быстро создать CRUD-интерфейс для всех моделей.
+
+Структура папок может выглядеть так:
+
+theatre_platform/
+├── manage.py
+├── theatre_platform/           # Корневые настройки проекта
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+└── apps/
+    ├── accounts/
+    │   ├── models.py         # Кастомная модель пользователя + профильные данные
+    │   ├── views.py          # Регистрация, авторизация, восстановление пароля, редактирование профиля
+    │   ├── urls.py
+    │   └── forms.py
+    ├── courses/
+    │   ├── models.py         # Модель Course, Enrollment (записи на курсы) и Schedule
+    │   ├── views.py
+    │   ├── urls.py
+    │   └── forms.py
+    ├── portfolio/
+    │   ├── models.py         # Модель PortfolioItem
+    │   ├── views.py
+    │   ├── urls.py
+    │   └── forms.py
+    └── reviews/
+        ├── models.py         # Модель Review
+        ├── views.py
+        ├── urls.py
+        └── forms.py
+2. Реализация функционала пользователя (студента/посетителя)
+Регистрация и авторизация
+Регистрация и восстановление пароля через email: Используем встроенные возможности Django:
+
+django.contrib.auth.views.PasswordResetView и другие соответствующие классы для восстановления пароля
+
+Создадим кастомную форму регистрации с проверкой электронной почты
+
+Настроим SMTP-сервер или используем Console backend для разработки
+
+Настройки профиля
+Форма редактирования профиля с полями (имя, контактная информация, загрузка фотографии). Для загрузки изображений используем поле ImageField.
+
+Возможность смены пароля – встроенный Django view PasswordChangeView
+
+Удаление учётной записи – вспомогательная форма/подтверждение, после которого удаляем объект пользователя
+
+Просмотр расписания курсов и запись на курсы
+Модель Course:
+
+python
+from django.db import models
+from django.conf import settings
+
+class Course(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    teacher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='courses')
+    start_date = models.DateField()
+    end_date = models.DateField()
+    time = models.TimeField()
+    personal_or_pair = models.CharField(max_length=10, choices=[('personal', 'Персональное'), ('pair', 'Парное')])
+    # Дополнительно: доступность, записи, лимит мест и т.д.
+    
+    def __str__(self):
+        return self.title
+Модель Enrollment: Для хранения записей студентов, со статусами:
+
+python
+class Enrollment(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Ожидание'),
+        ('confirmed', 'Подтверждено'),
+        ('completed', 'Завершено'),
+        ('declined', 'Отклонено'),
+    ]
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrollments')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')
+    enrollment_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    
+    def __str__(self):
+        return f"{self.student} -> {self.course} ({self.status})"
+В представлении можно отобразить список курсов с фильтрацией по дате, времени и доступности с помощью Django Generic Views (например, ListView).
+
+Портфолио
+Модель PortfolioItem: Позволит студенту добавлять фотографии, видео и текст:
+
+python
+class PortfolioItem(models.Model):
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='portfolio_items')
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    media_file = models.FileField(upload_to='portfolio/', blank=True, null=True)
+    media_url = models.URLField(blank=True, null=True)  # если видео хостится на YouTube или Vimeo
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.title
+Реализуем CRUD-функционал через формы и вьюхи, чтобы добавить, отредактировать или удалить портфолио-элемент.
+
+Просмотр истории записей и отзывы
+История записей – представляем список записей студента с данными о статусе (ожидание, подтверждено, завершено)
+
+Модель Review:
+
+python
+class Review(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='reviews')
+    reviewer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews')
+    rating = models.IntegerField()  # например, от 1 до 5
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    approved = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f"Review for {self.course} by {self.reviewer}"
+Пользователь сможет оставлять отзывы после завершения курса, а администратор — модерировать их в панели управления.
+
+3. Функционал преподавателя
+Авторизация: Преподаватель авторизуется через ту же систему, но у него будет другой профиль или роль (можно завести поле role в модели пользователя или использовать группы).
+
+Просмотр курсов и студентов: Преподаватель видит список курсов, за которые он отвечает, и список записанных студентов, включая детали (имя студента, тип прохождения, даты курсов).
+
+Управление записями студентов: Реализуем страницу с заявками на курсы, где преподаватель может подтвердить или отклонить запись. При этом статус в модели Enrollment изменяется. Пример простейшей вьюхи (на основе функции):
+
+python
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def manage_enrollment(request, enrollment_id, action):
+    enrollment = get_object_or_404(Enrollment, id=enrollment_id, course__teacher=request.user)
+    if action == 'confirm':
+        enrollment.status = 'confirmed'
+    elif action == 'decline':
+        enrollment.status = 'declined'
+    enrollment.save()
+    return redirect('teacher_dashboard')
+4. Функционал администратора
+Администратор имеет полный доступ ко всем данным. Django предоставляет мощную административную панель, где можно:
+
+Добавлять, редактировать и удалять данные о театральных представлениях, курсах, преподавателях и студентах.
+
+Модерировать отзывы (устанавливать поле approved).
+
+Управлять привилегиями пользователей.
+
+В административном интерфейсе регистрируем все наши модели:
+
+python
+from django.contrib import admin
+from .models import Course, Enrollment, PortfolioItem, Review
+
+admin.site.register(Course)
+admin.site.register(Enrollment)
+admin.site.register(PortfolioItem)
+admin.site.register(Review)
+5. Интеграция с внешними сервисами и дизайн
+Email для восстановления пароля – настройте email-бекенд (например, SMTP или сервис SendGrid).
+
+Генерация штрих-кодов: Для студентов карточки товара в вашем предыдущем ТЗ можно было использовать генераторы штрих-кодов. Здесь можно применять библиотеки, такие как python-barcode или ReportLab, если потребуется для печати/создания штрих-кодов.
+
+Дизайн по макетам Figma: Экспортируйте необходимые стили и графику из Figma и интегрируйте их в шаблоны Django. Подключите CSS-файлы в базовый шаблон (base.html).
+
+6. Следующие шаги
+Создание виртуального окружения и установка Django:
+
+sh
+python -m venv env
+source env/bin/activate   # для Linux/macOS
+env\Scripts\activate      # для Windows
+pip install django
+Инициализация проекта:
+
+sh
+django-admin startproject theatre_platform
+cd theatre_platform
+python manage.py startapp accounts
+python manage.py startapp courses
+python manage.py startapp portfolio
+python manage.py startapp reviews
+Настройка базы данных и url-маршрутов в файле settings.py и корневом urls.py.
+
+Реализация моделей, форм и вьюх согласно описанной архитектуре.
+
+Разработка шаблонов (HTML + CSS) с учётом Figma-дизайна.
+
+Настройка email-бекенда для работы с восстановлением пароля.
+
+Такой проект позволит строго разделить функционал для студентов, преподавателей и администратора, обеспечивая необходимую аутентификацию, работу с данными, а также удобный и безопасный интерфейс для всех пользователей.
+
+Если нужна более подробная информация по реализации конкретных разделов (например, примеры форм, настройки email или интеграцию Figma дизайна в шаблоны), можем углубиться в детали каждого модуля. Что из этого хотелось бы рассмотреть подробнее?
+
