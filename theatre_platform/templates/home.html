@@ -1,8 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}Главная{% endblock %}
+{% block title %}Школа театрального искусства{% endblock %}
 
 {% block content %}
-<h1>Добро пожаловать на Театральные курсы!</h1>
-<p>Здесь вы найдете информацию о курсах, расписании и многое другое.</p>
+    {% include "blocks/header.html" %}
+    {% include "blocks/about.html" %}
+    {% include "blocks/creative_process.html" %}
+    {% include "blocks/team.html" %}
+    {% include "blocks/teachers.html" %}
+    {% include "blocks/why_choose_us.html" %}
+    {% include "blocks/courses.html" %}
+    {% include "blocks/student_participation.html" %}
+    {% include "blocks/performances.html" %}
+    {% include "blocks/tour.html" %}
+    {% include "blocks/contacts.html" %}
 {% endblock %}
