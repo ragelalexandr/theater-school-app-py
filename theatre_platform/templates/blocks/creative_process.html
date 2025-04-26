@@ -1,0 +1,35 @@
+{% load static %}
+<div class="creative_process">
+    <div class="creative_process_header">
+        <h2>Наш творческий процесс</h2>
+    </div>
+    <div class="carousel">
+        <button class="prev">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                <path d="M25 10 L15 20 L25 30" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+
+        <!-- <div class="carousel-container">
+            {% for image in images %}
+            <img src="{% static 'images/slider/image1.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image2.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image3.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image4.png' %}" alt="Фото">
+            {% endfor %}
+        </div> -->
+        <div class="carousel-container">
+            {% for image in images %}
+                <img src="{{ image.url }}" alt="Фото">
+            {% endfor %}
+        </div>
+        
+        
+
+        <button class="next">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                <path d="M15 10 L25 20 L15 30" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+    </div>
+</div>

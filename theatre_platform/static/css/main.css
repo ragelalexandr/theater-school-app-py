@@ -1,7 +1,12 @@
 p {
     text-align: left;
-    font-size: 25px;    
+    font-size: 25px;
+    color: #ffffff;    
 
+}
+h1, h2 {
+    color: #ffffff;
+    font-size: 100px;
 }
 /* Основной контейнер шапки */
 .header {
@@ -138,3 +143,143 @@ p {
     margin-left: 100px;
     margin-right: 100px;
 }
+
+/* creative_process */
+
+.creative_process {
+    width: 100%;
+    height: 900px;
+    background-color: #000000; /* Черный фон */
+    display: flex;
+    flex-direction: column; /* Структурируем контент */
+    align-items: center;
+    justify-content: center; /* Центрируем элементы */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.creative_process_header {
+    text-align: center;
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Карусель */
+.carousel {
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+    max-width: 1200px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Контейнер изображений */
+.carousel-container {
+    display: flex;
+    gap: 10px;
+    transition: transform 0.5s ease-in-out;
+    width: 100%;
+    overflow: hidden; /* Скрывает лишние изображения */
+    white-space: nowrap; /* Запрещает перенос изображений на новую строку */
+}
+
+
+.carousel-container img {
+    width: 25%; /* Показываем 4 изображения */
+    height: auto;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+/* Кнопки карусели */
+button {
+    background-color: #ffffff;
+    /* background: none; */
+    border: none;
+    cursor: pointer;
+}
+
+/* Стили SVG-стрелок */
+.prev, .next {
+    pointer-events: auto; /* Разрешаем клики */
+    z-index: 10; /* Поднимаем кнопки над изображениями */
+}
+
+/* Наша команда */
+
+.team {
+    background-color: #B81E1E;
+    width: 100%;
+    height: 900px;
+    display: flex;
+    flex-direction: column; /* Структурируем контент */
+    align-items: center;
+    justify-content: center; /* Центрируем элементы */
+    padding: 20px;
+    box-sizing: border-box;
+}
+.team_card_wrapper {
+    display: flex;
+    justify-content: center; /* или space-between / space-around, в зависимости от нужного распределения */
+    align-items: center;     /* Центрирование по вертикали, если требуется */
+    gap: 20px;               /* Отступы между карточками, можно изменить по вкусу */
+  }
+
+.card {
+    background-color: #ffffff;
+    width: 300px;
+    height: 400px;
+    margin-right: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Центрирование по горизонтали */
+    align-items: center;      
+}
+
+.team p{
+    color: #000000;
+    text-align: center;
+}
+
+/* Наши преподаватели */
+
+.teachers {
+    background-color: #FFFDD0;
+    ;
+    width: 100%;
+    height: 900px;
+    display: flex;
+    flex-direction: column; /* Структурируем контент */
+    align-items: center;
+    justify-content: center; /* Центрируем элементы */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.teachers h2{
+    color: #000000;
+}
+
+.teachers_card_wrapper {
+    display: flex;
+    justify-content: center; /* или space-between / space-around, в зависимости от нужного распределения */
+    align-items: center;     /* Центрирование по вертикали, если требуется */
+    gap: 20px;               /* Отступы между карточками, можно изменить по вкусу */
+}
+
+.teachers .card{
+    height: 500px;
+    width: 400px;
+    background-color: #B81E1E
+}
+
+.teachers img{
+    height: 400px;
+    width: 300px;
+}
+
