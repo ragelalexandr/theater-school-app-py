@@ -1,12 +1,25 @@
+
+@font-face {
+    font-family: 'AleksandraC'; /* Название шрифта */
+    src: url('fonts/AleksandraC_regular.otf') format('opentype'); /* Укажите путь */
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Применение шрифта */
+body {
+    font-family: 'AleksandraC', sans-serif;
+}
+
 p {
     text-align: left;
-    font-size: 25px;
+    font-size: 14px;
     color: #ffffff;    
 
 }
 h1, h2 {
     color: #ffffff;
-    font-size: 100px;
+    font-size: 24px;
 }
 /* Основной контейнер шапки */
 .header {
@@ -14,9 +27,8 @@ h1, h2 {
     justify-content: space-between;
     align-items: stretch;
     width: 100%;
-    height: 900px;
-    background-color: #333;
-    
+    height: 600px;
+    background-color: #000000;  
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -64,24 +76,40 @@ h1, h2 {
     width: 100%;
 }
 
-.header_images {
-    position: relative;
-    max-width: 100%;
-    height: auto;
+.header_images1 {
+    width: 400px;
+    height: 400px;
+}
+
+.header_images2 {
+    width: 250px;
+    height: 400px;
+}
+
+.header_images3 {
+    width: 200px;
+    height: 194px;
+}
+
+.header_images4 {
+    width: 200px;
+    height: 194px;
+}
+
+.header_images5 {
+    width: 400px;
+    height: 400px;
 }
 
 .header_column {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 12px;
 }
 
 .header_text {
-    margin: 0;
+    margin: 0%;
     padding: 0;
-    width: 80%;
-
-    margin-top: 100px;
 }
 
 /* about.html */
@@ -91,7 +119,7 @@ h1, h2 {
     justify-content: space-between;
     align-items: stretch;
     width: 100%;
-    height: 900px;
+    height: 600px;
     background-color: #FFFDD0;
 }
 
@@ -148,7 +176,7 @@ h1, h2 {
 
 .creative_process {
     width: 100%;
-    height: 900px;
+    height: 600px;
     background-color: #000000; /* Черный фон */
     display: flex;
     flex-direction: column; /* Структурируем контент */
@@ -215,7 +243,7 @@ button {
 .team {
     background-color: #B81E1E;
     width: 100%;
-    height: 900px;
+    height: 600px;
     display: flex;
     flex-direction: column; /* Структурируем контент */
     align-items: center;
@@ -227,13 +255,13 @@ button {
     display: flex;
     justify-content: center; /* или space-between / space-around, в зависимости от нужного распределения */
     align-items: center;     /* Центрирование по вертикали, если требуется */
-    gap: 20px;               /* Отступы между карточками, можно изменить по вкусу */
+    gap: 10px;               /* Отступы между карточками, можно изменить по вкусу */
   }
 
 .card {
     background-color: #ffffff;
-    width: 300px;
-    height: 400px;
+    width: 200px;
+    height: 300px;
     margin-right: 20px;
     display: flex;
     flex-direction: column;
@@ -252,12 +280,12 @@ button {
     background-color: #FFFDD0;
     ;
     width: 100%;
-    height: 900px;
+    height: 600px;
     display: flex;
     flex-direction: column; /* Структурируем контент */
     align-items: center;
     justify-content: center; /* Центрируем элементы */
-    padding: 20px;
+    padding: 10px;
     box-sizing: border-box;
 }
 
@@ -273,13 +301,41 @@ button {
 }
 
 .teachers .card{
-    height: 500px;
-    width: 400px;
+    height: 300px;
+    width: 200px;
     background-color: #B81E1E
 }
 
 .teachers img{
-    height: 400px;
-    width: 300px;
+    height: 200px;
+    width: 150px;
+}
+/* Почему стоит выбрать нас? */
+
+.why_us {
+    background-color: #000000;
+    width: 100%;
+    height: 300px;
+    display: flex;
+    flex-direction: row; /* Горизонтальное расположение */
+    align-items: center;
+    justify-content: center; /* Центрирование */
+    box-sizing: border-box;
+}
+
+.red {
+    padding: 10px;
+    background-color: #B81E1E;
+    width: 50%;
+    height: 100%;
+    order: 0; /* Красный блок слева */
+}
+
+.black { 
+    padding: 10px;
+    background-color: #000000;
+    width: 50%;
+    height: 100%;
+    order: 1; /* Черный блок справа */
 }
 
