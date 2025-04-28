@@ -1,4 +1,3 @@
-
 @font-face {
     font-family: 'AleksandraC'; /* Название шрифта */
     src: url('fonts/AleksandraC_regular.otf') format('opentype'); /* Укажите путь */
@@ -12,16 +11,30 @@ body {
 }
 
 p {
+    margin: 0;
+    padding: 0;
     text-align: left;
     font-size: 14px;
     color: #ffffff;    
 
 }
 h1, h2 {
+    margin: 0;
+    padding: 0;
     color: #ffffff;
     font-size: 24px;
 }
-/* Основной контейнер шапки */
+
+h3 {
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+    font-size: 14px;
+}
+/*
+Основной контейнер шапки
+*/
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -112,7 +125,9 @@ h1, h2 {
     padding: 0;
 }
 
-/* about.html */
+/*
+about.html
+*/
 
 .about {
     display: flex;
@@ -166,13 +181,16 @@ h1, h2 {
     height: 50%; /* Цитата занимает оставшиеся 50% */
 }
 
-.p-about-quote {
+.about-quote p {
+    color: #000000;
     margin-top: 200px;
     margin-left: 100px;
     margin-right: 100px;
 }
 
-/* creative_process */
+/*
+creative_process
+*/
 
 .creative_process {
     width: 100%;
@@ -182,8 +200,9 @@ h1, h2 {
     flex-direction: column; /* Структурируем контент */
     align-items: center;
     justify-content: center; /* Центрируем элементы */
-    padding: 20px;
     box-sizing: border-box;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
 .creative_process_header {
@@ -238,7 +257,9 @@ button {
     z-index: 10; /* Поднимаем кнопки над изображениями */
 }
 
-/* Наша команда */
+/*
+Наша команда
+*/
 
 .team {
     background-color: #B81E1E;
@@ -248,8 +269,9 @@ button {
     flex-direction: column; /* Структурируем контент */
     align-items: center;
     justify-content: center; /* Центрируем элементы */
-    padding: 20px;
     box-sizing: border-box;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 .team_card_wrapper {
     display: flex;
@@ -278,15 +300,15 @@ button {
 
 .teachers {
     background-color: #FFFDD0;
-    ;
     width: 100%;
     height: 600px;
     display: flex;
     flex-direction: column; /* Структурируем контент */
     align-items: center;
     justify-content: center; /* Центрируем элементы */
-    padding: 10px;
     box-sizing: border-box;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
 .teachers h2{
@@ -310,7 +332,10 @@ button {
     height: 200px;
     width: 150px;
 }
-/* Почему стоит выбрать нас? */
+
+/*
+Почему стоит выбрать нас?
+*/
 
 .why_us {
     background-color: #000000;
@@ -339,3 +364,241 @@ button {
     order: 1; /* Черный блок справа */
 }
 
+/* Наши преподаватели */
+
+.courses {
+    background-color: #FFFDD0;
+    width: 100%;
+    height: 600px;
+    display: flex;
+    flex-direction: column; /* Структурируем контент */
+    align-items: center;
+    justify-content: center; /* Центрируем элементы */
+    padding: 10px;
+    box-sizing: border-box;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.courses h2{
+    color: #000000;
+}
+
+.courses_card_wrapper {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 блока в ряд */
+    grid-template-rows: repeat(2, auto); /* 2 ряда */
+    justify-content: center; /* или space-between / space-around, в зависимости от нужного распределения */
+    align-items: center;     /* Центрирование по вертикали, если требуется */
+    gap: 20px;               /* Отступы между карточками, можно изменить по вкусу */
+}
+
+.courses .card{
+    height: 220px;
+    width: 150px;
+    background-color: #000000
+}
+
+.courses img{
+    height: 140px;
+    width: 100px;
+}
+
+.courses p{
+    text-align: center;
+}
+
+/*
+Участие учеников в театре
+*/
+
+.student_participation {
+    background-color: #B81E1E;
+    width: 100%;
+    height: 600px;
+    display: flex;
+    flex-direction: column; /* Структурируем контент */
+    align-items: center;
+    justify-content: center; /* Центрируем элементы */
+    box-sizing: border-box;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.student_participation-image{
+    margin: 0;
+    padding: 0;
+    width: 850px;
+    height: 370px;
+    display: flex;
+
+}
+
+/*
+Наши театральные постановки
+*/
+
+.performances {
+    background-color: #000000;
+    width: 100%;
+    height: 600px; /* Размещаем элементы в строку */
+    align-items: center; /* Выравниваем по вертикали */
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.performances h2 {
+    text-align: center;
+}
+
+.performances-wrapper {
+    display: flex; /* Размещаем элементы в строку */
+    align-items: center; /* Выравниваем по вертикали */
+    justify-content: space-between; /* Разделяем равномерно */
+    gap: 20px; /* Добавляем отступ между блоками */
+}
+
+.performances-text {
+    width: 50%; /* Текст занимает половину ширины */
+}
+
+.performances-images {
+    display: flex; /* Размещает элементы в строку */
+    align-items: center; /* Выравнивание по вертикали */
+    justify-content: space-between; /* Равномерное распределение */
+    gap: 10px; /* Добавляет отступ между блоками */
+    width: 420px; /* Изображение занимает половину */
+    height: 420px;
+}
+
+.performances-images img {
+    width: 310px; /* Заполняет контейнер */
+    height: 310px; /* Сохраняет пропорции */
+}
+
+.performances_collum {
+    display: flex;
+    flex-direction: column; /* Элементы располагаются вертикально */
+    align-items: center; /* Центрируем изображения */
+    gap: 10px; /* Добавляем отступы между картинками */
+}
+
+.performances_collum img {
+    width: 152px; /* Заполняет контейнер */
+    height: 152px; /* Сохраняет пропорции */
+}
+
+performances-button {
+    background-color: #B81E1E;
+    color: #ffffff;
+}
+
+/*
+Наш тур
+*/
+
+.tour {
+    background-color: #B81E1E;
+    width: 100%;
+    height: 600px; /* Размещаем элементы в строку */
+    align-items: center; /* Выравниваем по вертикали */
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.tour h2 {
+    text-align: center;
+}
+
+/*
+Наши контакты
+*/
+
+.contacts {
+    background-color: #000000;
+    width: 100%;
+    height: 600px; /* Размещаем элементы в строку */
+    align-items: center; /* Выравниваем по вертикали */
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.contacts h2 {
+    text-align: center;
+}
+
+.contacts img {
+    width: 420px;
+    height: 420px;
+    margin: 30px;
+}
+
+.contacts-wrapper {
+    display: flex;
+    justify-content: space-between; /* Равномерное распределение */
+    align-items: center;
+    overflow: hidden; /* Предотвращение выхода за границы */
+    width: 100%;
+    max-width: 90%; /* Ограничение размера родительского блока */
+}
+
+.conracts-info{
+    width: 520px;
+    height: 520px;
+}
+
+.conracts-addres, 
+.contacts-phone {
+    background-color: #ffffff;
+    width: 300px;
+    height: 135px;
+    margin: 20px;
+    padding: 30px;
+}
+
+.conracts-addres p,
+.contacts-phone p {
+    color: #000000;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.conracts-addres h3,
+.contacts-phone h3 {
+    color: #000000;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.conracts-addres a,
+.contacts-phone a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.contacts-image .contacts-info .contacts-network {
+    flex: 1; /* Равномерное распределение ширины */
+    max-width: 100px; /* Ограничение размера */
+    padding: 10px;
+    border: 1px solid #000;
+}
+
+.contacts-network{
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.contacts-network h3{
+    text-align: center;
+}
+
+.contacts-network img{
+    height: 50px;
+}
+
+
+footer p {
+    text-align: center;
+}

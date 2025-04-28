@@ -1,0 +1,39 @@
+<!-- block contacts.html -->
+{% load static %}
+<div class="contacts">
+    <h2 class="contacts-header">Наши контакты</h2>
+    <div class="contacts-wrapper">
+        <div class="contacts-image">
+            <img src="{% static 'images/contacts.jpg' %}" alt="Фото комнаты с театральным реквизитом">
+        </div>
+        <div class="contacts-info">
+            <div class="conracts-addres">
+                <h3>Наш адрес:</h3>
+                <p>г. Минск, ул. Кальварийская, 6А</p>
+                <p>по будням с 10:00 до 21:00</p>
+                <p>по выходным с 12:00 до 16:00</p>
+            </div>
+            <div class="contacts-phone">
+                <h3>Свяжитесь с нами:</h3>
+                <p><a href="tel:+375256358190">+375 25 635 81 90</a></p>
+                <p><a href="mailto:staytheatre@gmail.com">staytheatre@gmail.com</a></p>
+            </div>
+        </div>
+        <div class="contacts-network">
+            <h3>Социальные сети</h3>
+            <a href="https://t.me/yourchannel" target="_blank">
+                <img src="{% static 'images/telegram-icon.svg' %}" alt="Telegram" width="40">
+            </a>
+            <a href="https://www.instagram.com/yourprofile" target="_blank">
+                <img src="{% static 'images/instagram-icon.svg' %}" alt="Instagram" width="40">
+            </a>
+            <a href="https://www.youtube.com/c/yourchannel" target="_blank">
+                <img src="{% static 'images/youtube-icon.svg' %}" alt="YouTube" width="40">
+            </a>
+        </div>
+    </div>
+    <footer>
+        <hr>
+        <p class="footer">© 2025 - STAY - Theater School. All Rights Reserved.</p>
+    </footer>
+</div>
