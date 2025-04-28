@@ -1,0 +1,56 @@
+<!-- block login.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Форма входа{% endblock %}
+
+{% block content %}
+<div id="loginModal" class="login_modal">
+    <div class="modal-content">
+
+        <div class="login_menu">
+            <a class="login_login" href="http://"><h2>Вход</h2></a>
+            <a class="login_registration" href="http://"><h2>Регистрация</h2></a>
+            
+        </div>
+        <span class="close" onclick="closeModal()">&times;</span>
+        <form method="post">
+            {% csrf_token %}
+            <input class="login_username" type="text" name="username" placeholder="ФИО">
+            <input class="login_password" type="password" name="password" placeholder="Пароль">
+            <button class="login_submit" type="submit">Войти</button>
+        </form>
+        <div class="remember_password">
+            <a href="http://">Забыли пароль?</a>
+        </div>
+        
+        
+    </div>
+</div>
+<script>
+function openModal() {
+    document.getElementById("loginModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("loginModal").style.display = "none";
+    window.location.href = "/"; // Перенаправление на главную
+}
+
+// Открываем окно автоматически при загрузке страницы
+document.addEventListener("DOMContentLoaded", function() {
+    openModal();
+});
+
+// Закрытие при клике вне модального окна
+window.onclick = function(event) {
+    let modal = document.getElementById("loginModal");
+    if (event.target == modal) {
+        closeModal();
+    }
+};
+
+</script>
+
+
+{% endblock %}
