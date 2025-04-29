@@ -1,3 +1,5 @@
+<!-- block about.html -->
+{% load static %}
 <div class="about">
     <div class="about-text">
         <h2>О НАС</h2>
@@ -9,7 +11,7 @@
     
     <div class="about-right">
         <div class="about-image">
-            <img src="static/images/about_image.png" alt="Потолок театра">
+            <img src="{% static 'images/about/about_image.jpg'%}" alt="Потолок театра">
         </div>
         <div class="about-quote">
             <p class="p-about-quote">"Театр — это зеркало, в котором мы видим отражение самих себя." — Константин Станиславский</p>
