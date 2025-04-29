@@ -1,0 +1,6 @@
+<h2>История записей на курсы</h2>
+<ul>
+    {% for enrollment in object_list %}
+        <li>{{ enrollment.course.title }} - статус: {{ enrollment.status }}</li>
+    {% endfor %}
+</ul>

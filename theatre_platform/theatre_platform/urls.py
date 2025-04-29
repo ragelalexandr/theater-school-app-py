@@ -14,26 +14,20 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-# from django.contrib import admin
-# from django.urls import path
-
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-# ]
-
-# theatre_platform/urls.py
-
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
 from django.urls import path
-from .views import home, registration
+from accounts import views
+from accounts.views import EnrollmentHistoryView
+from accounts import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home, name='home'),
-    path('registration/', registration, name='registration'),
+    path('', views.home, name='home'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('register/', views.register, name='register'),
+    path('reset_password/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('history/', EnrollmentHistoryView.as_view(), name='history'),
 ]
-
-
-
