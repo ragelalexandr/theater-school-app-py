@@ -4,6 +4,18 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm, DateInput
 from .models import CustomUser, Profile, Enrollment, Portfolio, Review
+from accounts.models import Performance, Course
+
+class PerformanceForm(forms.ModelForm):
+    class Meta:
+        model = Performance
+        fields = ['title', 'date', 'description']
+
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = ['title', 'teacher', 'start_date', 'end_date', 'available']
+
 
 class ProfileForm(ModelForm):
     class Meta:

@@ -3,6 +3,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
+from django.http import HttpResponse
+from .decorators import teacher_required
+from .models import Enrollment, Course
 from .forms import (
     CustomUserCreationForm,
     ProfileForm,
@@ -10,7 +13,48 @@ from .forms import (
     PortfolioForm,
     ReviewForm
 )
-from .models import Enrollment, Course
+
+
+
+
+@teacher_required
+def teacher_dashboard(request):
+    """
+    Отображает список курсов, за которые отвечает преподаватель, а также список записей студентов.
+    """
+    # Получаем курсы, где преподаватель является текущим пользователем
+    courses = Course.objects.filter(teacher=request.user)
+    # Получаем все записи по этим курсам
+    enrollments = Enrollment.objects.filter(course__in=courses)
+    
+    context = {
+        'courses': courses,
+        'enrollments': enrollments,
+    }
+    return render(request, 'accounts/teacher_dashboard.html', context)
+
+
+@teacher_required
+def approve_enrollment(request, enrollment_id):
+    """
+    Подтверждение записи студента.
+    """
+    enrollment = get_object_or_404(Enrollment, id=enrollment_id, course__teacher=request.user)
+    enrollment.status = Enrollment.APPROVED
+    enrollment.save()
+    return redirect('teacher_dashboard')
+
+
+@teacher_required
+def reject_enrollment(request, enrollment_id):
+    """
+    Отклонение записи студента.
+    """
+    enrollment = get_object_or_404(Enrollment, id=enrollment_id, course__teacher=request.user)
+    enrollment.status = Enrollment.DECLINED  # Используем только что добавленный статус 'declined'
+    enrollment.save()
+    return redirect('teacher_dashboard')
+
 
 def home(request):
     return render(request, 'home.html')

@@ -1,0 +1,60 @@
+<!-- accounts/teacher_dashboard.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Панель преподавателя</title>
+</head>
+<body>
+    <h1>Панель преподавателя</h1>
+
+    <h2>Мои курсы</h2>
+    {% if courses %}
+        <ul>
+        {% for course in courses %}
+            <li>
+                <strong>{{ course.title }}</strong> ({{ course.start_date }} - {{ course.end_date }})
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>У Вас пока нет курсов</p>
+    {% endif %}
+
+    <h2>Записи студентов</h2>
+    {% if enrollments %}
+        <table border="1">
+            <tr>
+                <th>Курс</th>
+                <th>Студент</th>
+                <th>Тип обучения</th>
+                <th>Начало</th>
+                <th>Окончание</th>
+                <th>Статус</th>
+                <th>Действия</th>
+            </tr>
+            {% for enrollment in enrollments %}
+            <tr>
+                <td>{{ enrollment.course.title }}</td>
+                <td>{{ enrollment.student.username }}</td>
+                <td>{{ enrollment.get_type_of_learning_display }}</td>
+                <td>{{ enrollment.start_date }}</td>
+                <td>{{ enrollment.end_date }}</td>
+                <td>{{ enrollment.get_status_display }}</td>
+                <td>
+                    {% if enrollment.status == 'pending' %}
+                        <a href="{% url 'approve_enrollment' enrollment_id=enrollment.id %}">Подтвердить</a> |
+                        <a href="{% url 'reject_enrollment' enrollment_id=enrollment.id %}">Отклонить</a>
+                    {% else %}
+                        <!-- если запись уже обработана, никаких действий -->
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>Нет заявок на курсы</p>
+    {% endif %}
+</body>
+</html>

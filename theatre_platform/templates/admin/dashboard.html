@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ-панель</title>
+</head>
+<body>
+    <h1>Панель администратора</h1>
+    <ul>
+        <li><a href="{% url 'performance_list' %}">Представления ({{ performances_count }})</a></li>
+        <li><a href="{% url 'course_list' %}">Курсы ({{ courses_count }})</a></li>
+        <li><a href="{% url 'teacher_list' %}">Преподаватели ({{ teachers_count }})</a></li>
+        <li><a href="{% url 'student_list' %}">Студенты ({{ students_count }})</a></li>
+        <li><a href="{% url 'review_list' %}">Отзывы на модерации ({{ pending_reviews_count }})</a></li>
+    </ul>
+</body>
+</html>

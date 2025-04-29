@@ -1,5 +1,4 @@
 # theatre_platform/accounts/models.py
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -29,12 +28,25 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+# Модель театральных представлений
+class Performance(models.Model):
+    title = models.CharField("Название", max_length=200)
+    date = models.DateField("Дата")
+    description = models.TextField("Описание")
+    
+    def __str__(self):
+        return self.title
+
 class Course(models.Model):
-    title = models.CharField(max_length=200)
-    teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE, limit_choices_to={'is_teacher': True})
-    start_date = models.DateField()
-    end_date = models.DateField()
-    available = models.BooleanField(default=True)
+    title = models.CharField("Название курса", max_length=200)
+    teacher = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        limit_choices_to={'is_teacher': True}
+    )
+    start_date = models.DateField("Начало курса")
+    end_date = models.DateField("Конец курса")
+    available = models.BooleanField("Доступен", default=True)
     
     def __str__(self):
         return self.title
@@ -49,11 +61,13 @@ class Enrollment(models.Model):
     
     PENDING = 'pending'
     APPROVED = 'approved'
+    DECLINED = 'declined'
     COMPLETED = 'completed'
     STATUS_CHOICES = [
         (PENDING, 'Ожидание'),
         (APPROVED, 'Подтверждено'),
-        (COMPLETED, 'Завершено')
+        (DECLINED, 'Отклонено'),
+        (COMPLETED, 'Завершено'),
     ]
     
     student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -78,8 +92,18 @@ class Portfolio(models.Model):
 class Review(models.Model):
     student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    text = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    text = models.TextField("Отзыв")
+    created_at = models.DateTimeField("Дата создания", auto_now_add=True)
+    moderation_status = models.CharField(
+        "Статус модерации",
+        max_length=20,
+        choices=[
+            ('pending', 'На модерации'),
+            ('approved', 'Одобрен'),
+            ('rejected', 'Отклонен')
+        ],
+        default='pending'
+    )
     
     def __str__(self):
         return f"Отзыв от {self.student.username} о {self.course.title}"
