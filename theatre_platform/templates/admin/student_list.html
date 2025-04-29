@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список студентов</title>
+</head>
+<body>
+    <h1>Список студентов</h1>
+    {% if students %}
+        <ul>
+            {% for student in students %}
+                <li>{{ student.username }} – {{ student.email }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Нет студентов для отображения.</p>
+    {% endif %}
+    <p><a href="{% url 'admin_dashboard' %}">Назад к панели администратора</a></p>
+</body>
+</html>
