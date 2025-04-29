@@ -1,16 +1,17 @@
 <!-- block login.html -->
 {% extends "base.html" %}
+
 {% load static %}
 
-{% block title %}Форма входа{% endblock %}
+{% block title %}Вход{% endblock %}
 
 {% block content %}
 <div id="loginModal" class="login_modal">
     <div class="modal-content">
 
         <div class="login_menu">
-            <a class="login_login" href="http://"><h2>Вход</h2></a>
-            <a class="login_registration" href="http://"><h2>Регистрация</h2></a>
+            <a class="login_login" href="{% url 'login' %}"><h2>Вход</h2></a>
+            <a class="login_registration" href="{% url 'registration' %}"><h2>Регистрация</h2></a>
             
         </div>
         <span class="close" onclick="closeModal()">&times;</span>
@@ -23,8 +24,6 @@
         <div class="remember_password">
             <a href="http://">Забыли пароль?</a>
         </div>
-        
-        
     </div>
 </div>
 <script>

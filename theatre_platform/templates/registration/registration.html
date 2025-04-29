@@ -1,0 +1,59 @@
+<!-- block registration.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+<div id="registrationModal" class="registration_modal">
+    <div class="modal-content">
+        <div class="registration_menu">
+            <a class="registration_login" href="{% url 'login' %}"><h2>Вход</h2></a>
+            <a class="registration_registration" href="{% url 'registration' %}"><h2>Регистрация</h2></a>
+            
+        </div>
+        <span class="close" onclick="closeModal()">&times;</span>
+        <form method="post">
+            {% csrf_token %}
+            <input class="registration_username" type="text" name="username" placeholder="ФИО">
+            <input class="registration_password" type="password" name="password" placeholder="Пароль">
+            <input class="registration_email" type="email" name="email" placeholder="E-mail">
+            <button class="registration_submit" type="submit">Зарегистрироваться</button>
+        </form>
+        <div class="remember_password">
+            <a href="http://">Забыли пароль?</a>
+        </div>
+        
+        
+    </div>
+</div>
+<script>
+function openModal() {
+    let modal = document.getElementById("registrationModal");
+    modal.style.display = "flex";
+    setTimeout(() => modal.classList.add("active"), 10);
+}
+
+
+function closeModal() {
+    document.getElementById("registrationModal").style.display = "none";
+    window.location.href = "/"; // Перенаправление на главную
+}
+
+// Открываем окно автоматически при загрузке страницы
+document.addEventListener("DOMContentLoaded", function() {
+    openModal();
+});
+
+// Закрытие при клике вне модального окна
+window.onclick = function(event) {
+    let modal = document.getElementById("registrationModal");
+    if (event.target == modal) {
+        closeModal();
+    }
+};
+
+</script>
+
+
+{% endblock %}

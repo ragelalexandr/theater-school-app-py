@@ -7,7 +7,7 @@ def home(request):
 
 def registration(request):
     # Пока что просто отображаем шаблон, форму можно добавить позже.
-    return render(request, 'registration.html')
+    return render(request, 'registration/registration.html')
 
 from django.shortcuts import render
 

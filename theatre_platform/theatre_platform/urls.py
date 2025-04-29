@@ -31,8 +31,8 @@ from .views import home, registration
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
-    path('register/', registration, name='register'),
-    path("login/", auth_views.LoginView.as_view(), name="login"),
+    path('registration/', registration, name='registration'),
+    path('login/', auth_views.LoginView.as_view(), name='login'),
 ]
 
 
