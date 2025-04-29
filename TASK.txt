@@ -176,3 +176,372 @@ https://github.com/saitama-saitama/TheaterSchool-diplom
 
 Рекомендации по реализации:
 ✅ Django для админки и управления данными. ✅ Django REST Framework для API (если планируется мобильная версия). ✅ PostgreSQL/MySQL как база данных для хранения информации. ✅ Bootstrap или Tailwind CSS для адаптивного дизайна. ✅ Celery для асинхронных задач (например, отправка email-подтверждений).
+
+
+
+
+
+
+
+иже приведён итоговый код для вашего проекта на основе ранее обсуждённых решений. Он рассчитан на структуру, которую вы предоставили:
+
+1. Файл accounts/models.py
+python
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True)
+    is_student = models.BooleanField(default=True)
+    is_teacher = models.BooleanField(default=False)
+    
+    # Если возникают конфликты для `groups` и `user_permissions`,
+    # можно явно указать related_name:
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='customuser_groups',
+        blank=True
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='customuser_permissions',
+        blank=True
+    )
+
+class Profile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=15, blank=True)
+    photo = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+    
+    def __str__(self):
+        return self.user.username
+
+class Performance(models.Model):
+    title = models.CharField("Название", max_length=200)
+    date = models.DateField("Дата")
+    description = models.TextField("Описание")
+    
+    def __str__(self):
+        return self.title
+
+class Course(models.Model):
+    title = models.CharField("Название курса", max_length=200)
+    teacher = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        limit_choices_to={'is_teacher': True}
+    )
+    start_date = models.DateField("Начало курса")
+    end_date = models.DateField("Конец курса")
+    available = models.BooleanField("Доступен", default=True)
+    
+    def __str__(self):
+        return self.title
+
+class Enrollment(models.Model):
+    PERSONAL = 'personal'
+    GROUP = 'group'
+    LEARNING_CHOICES = [
+        (PERSONAL, 'Персональное'),
+        (GROUP, 'Парное')
+    ]
+    
+    PENDING = 'pending'
+    APPROVED = 'approved'
+    DECLINED = 'declined'
+    COMPLETED = 'completed'
+    STATUS_CHOICES = [
+        (PENDING, 'Ожидание'),
+        (APPROVED, 'Подтверждено'),
+        (DECLINED, 'Отклонено'),
+        (COMPLETED, 'Завершено'),
+    ]
+    
+    student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    type_of_learning = models.CharField(max_length=20, choices=LEARNING_CHOICES)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
+    
+    def __str__(self):
+        return f"{self.student.username} - {self.course.title}"
+
+class Portfolio(models.Model):
+    student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    description = models.TextField(blank=True)
+    image = models.ImageField(upload_to='portfolio/', blank=True, null=True)
+    video = models.FileField(upload_to='portfolio_videos/', blank=True, null=True)
+    
+    def __str__(self):
+        return f"Portfolio of {self.student.username}"
+
+class Review(models.Model):
+    student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    text = models.TextField("Отзыв")
+    created_at = models.DateTimeField("Дата создания", auto_now_add=True)
+    moderation_status = models.CharField(
+        "Статус модерации",
+        max_length=20,
+        choices=[
+            ('pending', 'На модерации'),
+            ('approved', 'Одобрен'),
+            ('rejected', 'Отклонен')
+        ],
+        default='pending'
+    )
+    
+    def __str__(self):
+        return f"Отзыв от {self.student.username} о {self.course.title}"
+    
+    class Meta:
+        verbose_name = "Отзыв"
+        verbose_name_plural = "Отзывы"
+2. Файл accounts/forms.py
+python
+from django import forms
+from accounts.models import Performance, Course
+
+class PerformanceForm(forms.ModelForm):
+    class Meta:
+        model = Performance
+        fields = ['title', 'date', 'description']
+
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = ['title', 'teacher', 'start_date', 'end_date', 'available']
+3. Файл accounts/admin_views.py
+python
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
+from django.contrib.admin.views.decorators import staff_member_required
+from accounts.models import Performance, Course, CustomUser, Review
+from accounts.forms import PerformanceForm, CourseForm
+
+@staff_member_required
+def admin_dashboard(request):
+    context = {
+        'performances_count': Performance.objects.count(),
+        'courses_count': Course.objects.count(),
+        'teachers_count': CustomUser.objects.filter(is_teacher=True).count(),
+        'students_count': CustomUser.objects.filter(is_student=True).count(),
+        'pending_reviews_count': Review.objects.filter(moderation_status='pending').count(),
+    }
+    return render(request, 'admin/dashboard.html', context)
+
+# Управление представлениями
+@staff_member_required
+def performance_list(request):
+    performances = Performance.objects.all()
+    return render(request, 'admin/performances_list.html', {'performances': performances})
+
+@staff_member_required
+def performance_create(request):
+    if request.method == 'POST':
+        form = PerformanceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('performance_list')
+    else:
+        form = PerformanceForm()
+    return render(request, 'admin/performance_form.html', {'form': form})
+
+@staff_member_required
+def performance_edit(request, pk):
+    performance = get_object_or_404(Performance, pk=pk)
+    if request.method == 'POST':
+        form = PerformanceForm(request.POST, instance=performance)
+        if form.is_valid():
+            form.save()
+            return redirect('performance_list')
+    else:
+        form = PerformanceForm(instance=performance)
+    return render(request, 'admin/performance_form.html', {'form': form})
+
+@staff_member_required
+def performance_delete(request, pk):
+    performance = get_object_or_404(Performance, pk=pk)
+    if request.method == 'POST':
+        performance.delete()
+        return redirect('performance_list')
+    return render(request, 'admin/performance_confirm_delete.html', {'performance': performance})
+
+# Управление курсами
+@staff_member_required
+def course_list(request):
+    courses = Course.objects.all()
+    return render(request, 'admin/course_list.html', {'courses': courses})
+
+@staff_member_required
+def course_create(request):
+    if request.method == 'POST':
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('course_list')
+    else:
+        form = CourseForm()
+    return render(request, 'admin/course_form.html', {'form': form})
+
+@staff_member_required
+def course_edit(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    if request.method == 'POST':
+        form = CourseForm(request.POST, instance=course)
+        if form.is_valid():
+            form.save()
+            return redirect('course_list')
+    else:
+        form = CourseForm(instance=course)
+    return render(request, 'admin/course_form.html', {'form': form})
+
+@staff_member_required
+def course_delete(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    if request.method == 'POST':
+        course.delete()
+        return redirect('course_list')
+    return render(request, 'admin/course_confirm_delete.html', {'course': course})
+
+# Просмотр преподавателей
+@staff_member_required
+def teacher_list(request):
+    teachers = CustomUser.objects.filter(is_teacher=True)
+    return render(request, 'admin/teacher_list.html', {'teachers': teachers})
+
+# Просмотр студентов
+@staff_member_required
+def student_list(request):
+    students = CustomUser.objects.filter(is_student=True)
+    return render(request, 'admin/student_list.html', {'students': students})
+
+# Модерация отзывов
+@staff_member_required
+def review_list(request):
+    reviews = Review.objects.all()
+    return render(request, 'admin/review_list.html', {'reviews': reviews})
+
+@staff_member_required
+def review_moderate(request, pk, action):
+    review = get_object_or_404(Review, pk=pk)
+    if action == 'approve':
+        review.moderation_status = 'approved'
+    elif action == 'reject':
+        review.moderation_status = 'rejected'
+    review.save()
+    return redirect('review_list')
+4. Файл accounts/urls_admin.py
+python
+from django.urls import path
+from accounts.admin_views import (
+    admin_dashboard,
+    performance_list, performance_create, performance_edit, performance_delete,
+    course_list, course_create, course_edit, course_delete,
+    teacher_list, student_list,
+    review_list, review_moderate,
+)
+
+urlpatterns = [
+    path('dashboard/', admin_dashboard, name='admin_dashboard'),
+    # Управление представлениями
+    path('performances/', performance_list, name='performance_list'),
+    path('performances/add/', performance_create, name='performance_create'),
+    path('performances/edit/<int:pk>/', performance_edit, name='performance_edit'),
+    path('performances/delete/<int:pk>/', performance_delete, name='performance_delete'),
+    # Управление курсами
+    path('courses/', course_list, name='course_list'),
+    path('courses/add/', course_create, name='course_create'),
+    path('courses/edit/<int:pk>/', course_edit, name='course_edit'),
+    path('courses/delete/<int:pk>/', course_delete, name='course_delete'),
+    # Списки преподавателей и студентов
+    path('teachers/', teacher_list, name='teacher_list'),
+    path('students/', student_list, name='student_list'),
+    # Модерация отзывов
+    path('reviews/', review_list, name='review_list'),
+    path('reviews/<int:pk>/<str:action>/', review_moderate, name='review_moderate'),
+]
+5. Файл theatre_platform/theatre_platform/urls.py
+python
+from django.contrib import admin
+from django.urls import path, include
+from accounts import views as account_views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', account_views.home, name='home'),
+    # Подключаем кастомный админ-раздел
+    path('admin-panel/', include('accounts.urls_admin')),
+]
+Дополнительно
+Публичные представления Убедитесь, что в файле accounts/views.py определена функция home (и другие публичные представления, если необходимо). Пример:
+
+python
+from django.shortcuts import render
+
+def home(request):
+    return render(request, 'home.html')
+Шаблоны административного раздела Разместите в каталоге templates/admin/ следующие файлы (примерные названия):
+
+dashboard.html
+
+performances_list.html
+
+performance_form.html
+
+performance_confirm_delete.html
+
+course_list.html
+
+course_form.html
+
+course_confirm_delete.html
+
+teacher_list.html
+
+student_list.html
+
+review_list.html
+
+Пример содержимого файла templates/admin/dashboard.html:
+
+html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ-панель</title>
+</head>
+<body>
+    <h1>Панель администратора</h1>
+    <ul>
+        <li><a href="{% url 'performance_list' %}">Представления ({{ performances_count }})</a></li>
+        <li><a href="{% url 'course_list' %}">Курсы ({{ courses_count }})</a></li>
+        <li><a href="{% url 'teacher_list' %}">Преподаватели ({{ teachers_count }})</a></li>
+        <li><a href="{% url 'student_list' %}">Студенты ({{ students_count }})</a></li>
+        <li><a href="{% url 'review_list' %}">Отзывы (на модерации: {{ pending_reviews_count }})</a></li>
+    </ul>
+</body>
+</html>
+Статические файлы и шаблоны для публичной части Разместите базовый шаблон templates/base.html и остальные файлы в каталоге templates/, а статические файлы в каталоге static/ согласно вашей структуре.
+
+Заключение
+Эта сборка итогового кода соответствует вашей файловой структуре и реализует требуемый функционал:
+
+Управление базой данных (CRUD для представлений и курсов, просмотр списков преподавателей и студентов, модерация отзывов) через кастомный административный раздел, доступный по адресу /admin-panel/.
+
+Публичные маршруты и функционал для сайта через accounts/views.py.
+
+После внесения этих файлов, выполните миграции:
+
+bash
+python manage.py makemigrations
+python manage.py migrate
+Запустите сервер:
+
+bash
+python manage.py runserver
+Затем проверьте главную страницу (/), а для административного раздела – перейдите по /admin-panel/dashboard/ (при условии, что вы авторизованы как пользователь с is_staff=True).
+
+Если будут вопросы или потребуется дополнительная настройка – обращайтесь!
