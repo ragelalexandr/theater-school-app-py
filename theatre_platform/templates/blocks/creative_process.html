@@ -1,3 +1,4 @@
+<!-- block creative_process.html -->
 {% load static %}
 <div class="creative_process">
     <div class="creative_process_header">
@@ -5,31 +6,44 @@
     </div>
     <div class="carousel">
         <button class="prev">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                <path d="M25 10 L15 20 L25 30" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <img src="{% static 'images/slider/left_slider_button.svg'%}" alt="Влево">
         </button>
-
-        <!-- <div class="carousel-container">
+        <div class="carousel-container">
             {% for image in images %}
             <img src="{% static 'images/slider/image1.png' %}" alt="Фото">
             <img src="{% static 'images/slider/image2.png' %}" alt="Фото">
             <img src="{% static 'images/slider/image3.png' %}" alt="Фото">
             <img src="{% static 'images/slider/image4.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image5.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image6.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image7.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image8.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image8.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image9.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image10.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image11.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image12.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image13.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image14.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image15.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image16.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image17.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image19.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image20.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image21.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image22.png' %}" alt="Фото">
+            <img src="{% static 'images/slider/image23.png' %}" alt="Фото">
+
+            
             {% endfor %}
-        </div> -->
-        <div class="carousel-container">
+        </div>
+        <!-- <div class="carousel-container">
             {% for image in images %}
                 <img src="{{ image.url }}" alt="Фото">
             {% endfor %}
-        </div>
-        
-        
-
+        </div> -->
         <button class="next">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                <path d="M15 10 L25 20 L15 30" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <img src="{% static 'images/slider/right_slider_button.svg'%}" alt="Влево">
         </button>
     </div>
 </div>
